@@ -3,7 +3,6 @@ import { useElevatorSocket } from './hooks/useElevatorSocket';
 import { Header } from './components/Header';
 import { ElevatorShaft } from './components/ElevatorShaft';
 import { CabinControls } from './components/CabinControls';
-import { TestScenarioRunner } from './components/TestScenarioRunner';
 
 export const App: React.FC = () => {
   const {
@@ -64,13 +63,6 @@ export const App: React.FC = () => {
       />
 
       <main className="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
-        {/* Scenario runner for quick interview demonstrations */}
-        <TestScenarioRunner
-          onHallCall={sendHallCall}
-          onCarCall={sendCarCall}
-          onReset={resetSimulation}
-        />
-
         {/* 10 floors x 3 elevators visual shafts */}
         <ElevatorShaft
           elevators={elevators}

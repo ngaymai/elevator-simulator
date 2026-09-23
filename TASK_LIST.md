@@ -31,7 +31,6 @@ Elevator simulator web app using Node.js (backend) and React.js (frontend) simul
 - [x] Implement Hall Call panel (UP/DOWN buttons with active state indicators)
 - [x] Implement Cabin Internal panel (Floor buttons 1-10, Door Open `<|>`, Door Close `>|<`)
 - [x] Integrate WebSocket client with smooth floor transition animations & real-time telemetry
-- [x] Build One-Click Automated Interview Test Case Demonstrator
 
 ### Phase 4: Automated Testing & Verification
 - [x] Unit tests for Elevator State Machine & Dispatching Algorithm (100% core coverage)

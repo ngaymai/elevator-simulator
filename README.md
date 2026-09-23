@@ -22,7 +22,8 @@ Developed to meet and exceed the requirements in `Requirements/BAT-Node.js - Int
 - **Real-time Bi-directional Streaming**:
   - Synchronized state streaming via WebSocket (`socket.io`).
   - Speed toggle (1x, 2x, 5x) for rapid simulation testing and interactive presentation.
-  - One-click **Automated Interview Test Case Demonstrator** directly on the UI.
+- **Automated Verification**:
+  - 100% test coverage verifying the interview directional LOOK/SCAN constraints via Vitest (`npm test`).
 
 ---
 
@@ -66,7 +67,7 @@ TheChadDigital/
     │   ├── tests/                 # Vitest unit & integration test suites
     │   └── index.ts               # Server entrypoint (Port 4000)
     └── frontend/                  # React.js + Tailwind CSS Visualizer
-        ├── components/            # ElevatorShaft, CabinControls, Header, ScenarioRunner
+        ├── components/            # ElevatorShaft, CabinControls, Header
         ├── hooks/                 # useElevatorSocket hook
         ├── App.tsx
         ├── main.tsx
