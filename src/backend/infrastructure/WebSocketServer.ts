@@ -41,6 +41,34 @@ export class WebSocketServer {
   #setupRoutes(): void {
     this.#app.use(express.json());
 
+    this.#app.get('/', (_req, res) => {
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Elevator Simulator Backend API</title>
+          <meta http-equiv="refresh" content="2;url=http://localhost:3000" />
+          <style>
+            body { font-family: system-ui, sans-serif; background: #020617; color: #f8fafc; padding: 40px; text-align: center; }
+            .card { max-width: 500px; margin: 40px auto; background: #0f172a; padding: 32px; border-radius: 12px; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+            .btn { display: inline-block; background: #e11d48; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; transition: background 0.2s; }
+            .btn:hover { background: #be123c; }
+            .sub { color: #94a3b8; font-size: 13px; margin-top: 15px; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <h2>Elevator Simulator Backend (Port 4000)</h2>
+            <p style="color: #38bdf8;">WebSocket & REST API Server is running.</p>
+            <p>To view the interactive simulation UI, open the Frontend:</p>
+            <a href="http://localhost:3000" class="btn">Open Web Application &rarr;</a>
+            <p class="sub">Auto-redirecting to http://localhost:3000 in 2 seconds...</p>
+          </div>
+        </body>
+        </html>
+      `);
+    });
+
     this.#app.get('/health', (_req, res) => {
       res.json({
         status: 'UP',
