@@ -12,7 +12,7 @@ import {
   ElevatorSnapshot, 
   HallCallState, 
   TOTAL_FLOORS 
-} from '@elevator-sim/shared';
+} from '@shared';
 
 interface ElevatorShaftProps {
   elevators: ElevatorSnapshot[];

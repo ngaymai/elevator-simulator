@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SimulationEngine } from '../src/application/SimulationEngine';
+import { SimulationEngine } from '../application/SimulationEngine';
 
 describe('SimulationEngine Multi-Car Orchestration', () => {
   let engine: SimulationEngine;

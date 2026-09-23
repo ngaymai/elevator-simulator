@@ -8,7 +8,7 @@ import {
   SystemSnapshot, 
   TOTAL_ELEVATORS, 
   TOTAL_FLOORS 
-} from '@elevator-sim/shared';
+} from '@shared';
 import { Elevator } from '../domain/entities/Elevator';
 import { HallCallRequest } from '../domain/entities/ElevatorRequest';
 import { IElevatorDispatcher } from '../domain/dispatchers/IElevatorDispatcher';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronsLeftRight, ChevronsRightLeft, UserCheck } from 'lucide-react';
-import { ElevatorSnapshot, TOTAL_FLOORS } from '@elevator-sim/shared';
+import { ElevatorSnapshot, TOTAL_FLOORS } from '@shared';
 
 interface CabinControlsProps {
   elevators: ElevatorSnapshot[];

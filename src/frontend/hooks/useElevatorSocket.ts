@@ -6,7 +6,7 @@ import {
   HallCallPayload, 
   CarCallPayload, 
   DoorControlPayload 
-} from '@elevator-sim/shared';
+} from '@shared';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
 

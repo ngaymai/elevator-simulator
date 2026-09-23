@@ -1,6 +1,6 @@
 import React from 'react';
 import { Activity, Clock, RotateCcw, Zap } from 'lucide-react';
-import { SystemSnapshot } from '@elevator-sim/shared';
+import { SystemSnapshot } from '@shared';
 
 interface HeaderProps {
   isConnected: boolean;

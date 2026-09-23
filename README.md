@@ -36,30 +36,41 @@ All detailed architectural documentation includes **Mermaid diagrams**:
 
 ---
 
-## Project Structure (Monorepo)
+## Project Structure
+
+All source code is cleanly consolidated under `/src`:
 
 ```text
 TheChadDigital/
-├── package.json                   # Monorepo workspaces config (npm workspaces)
-├── tsconfig.base.json             # Root TypeScript compiler options
+├── package.json                   # Single unified package.json for entire project
+├── tsconfig.json                  # Root TypeScript compiler options
+├── tsconfig.server.json           # Server build config
+├── vite.config.ts                 # Vite bundler & Vitest test runner configuration
+├── tailwind.config.js             # Tailwind CSS configuration
+├── postcss.config.js              # PostCSS plugins
+├── index.html                     # Entry HTML pointing to /src/frontend/main.tsx
 ├── TASK_LIST.md                   # Real-time task progress tracker
-├── Requirements/                  # Original test problem specification
+├── Requirements/                  # Original interview test problem specification
 ├── docs/                          # Architectural specs, ADRs, and presentation guides
 │   ├── ARCHITECTURE.md
 │   ├── ADR-001-DISPATCHER.md
 │   ├── INTERVIEW_STRATEGY.md
 │   └── ADVERSARIAL_REVIEW.md
-├── shared/                        # Shared contracts, DTOs, and event signatures
-│   └── src/index.ts
-├── backend/                       # Node.js + TypeScript simulation engine
-│   ├── src/domain/                # Pure OOP Domain layer (Door, Elevator, Request, Dispatchers)
-│   ├── src/application/           # Simulation clock & multi-car orchestrator
-│   ├── src/infrastructure/        # WebSocket server & REST health endpoints
-│   └── tests/                     # Vitest unit & integration test suites
-└── frontend/                      # React.js + Vite + Tailwind CSS visualizer
-    └── src/
+└── src/                           # ALL APPLICATION SOURCE CODE
+    ├── shared/                    # Types, Enums, Contracts, Constants
+    │   └── index.ts
+    ├── backend/                   # Node.js + WebSocket Server
+    │   ├── domain/                # Pure OOP Domain layer (Door, Elevator, Request, Dispatchers)
+    │   ├── application/           # Simulation clock & multi-car orchestrator
+    │   ├── infrastructure/        # WebSocket server & REST health endpoints
+    │   ├── tests/                 # Vitest unit & integration test suites
+    │   └── index.ts               # Server entrypoint (Port 4000)
+    └── frontend/                  # React.js + Tailwind CSS Visualizer
         ├── components/            # ElevatorShaft, CabinControls, Header, ScenarioRunner
-        └── hooks/                 # useElevatorSocket hook
+        ├── hooks/                 # useElevatorSocket hook
+        ├── App.tsx
+        ├── main.tsx
+        └── index.css
 ```
 
 ---
@@ -71,34 +82,37 @@ TheChadDigital/
 - npm >= 9.x
 
 ### 1. Installation
-Install all dependencies across the monorepo:
+Install all dependencies in one command:
 ```bash
 npm install
 ```
 
-### 2. Build All Packages
+### 2. Running the Application Locally
+Run both Backend (Port 4000) and Frontend (Port 3000) concurrently:
 ```bash
-npm run build:shared
-npm run build:backend
-npm run build:frontend
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+*(Optional)* You can also run them separately:
+```bash
+# Terminal 1: Backend
+npm run dev:backend
+
+# Terminal 2: Frontend
+npm run dev:frontend
 ```
 
 ### 3. Running the Test Suite
 Run all unit and integration tests:
 ```bash
-npm run test
+npm test
 ```
 
-### 4. Running the Application Locally
-To run both backend and frontend concurrently:
+### 4. Build for Production
 ```bash
-# Terminal 1: Start Backend (Port 4000)
-npm run dev:backend
-
-# Terminal 2: Start Frontend (Port 3000)
-npm run dev:frontend
+npm run build
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the elevator simulation.
 
 ---
 

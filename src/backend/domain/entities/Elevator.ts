@@ -5,7 +5,7 @@ import {
   ElevatorStatus, 
   MAX_FLOOR, 
   MIN_FLOOR 
-} from '@elevator-sim/shared';
+} from '@shared';
 import { Door } from './Door';
 import { ElevatorRequest, HallCallRequest, CarCallRequest } from './ElevatorRequest';
 

@@ -6,7 +6,7 @@ import {
   DoorControlPayload, 
   HallCallPayload, 
   WS_EVENTS 
-} from '@elevator-sim/shared';
+} from '@shared';
 import { SimulationEngine } from '../application/SimulationEngine';
 
 export class WebSocketServer {

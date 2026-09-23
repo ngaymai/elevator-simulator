@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Elevator } from '../src/domain/entities/Elevator';
-import { HallCallRequest } from '../src/domain/entities/ElevatorRequest';
+import { Elevator } from '../domain/entities/Elevator';
+import { HallCallRequest } from '../domain/entities/ElevatorRequest';
 
 describe('Elevator Domain Entity & LOOK/SCAN Logic', () => {
   let elevator: Elevator;

@@ -1,4 +1,4 @@
-import { DoorState } from '@elevator-sim/shared';
+import { DoorState } from '@shared';
 
 /**
  * Encapsulated Door subsystem with state-driven transitions and dwell timing.

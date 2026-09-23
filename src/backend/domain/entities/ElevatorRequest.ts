@@ -1,4 +1,4 @@
-import { Direction, RequestType } from '@elevator-sim/shared';
+import { Direction, RequestType } from '@shared';
 
 /**
  * Abstract base class representing any request in the elevator system.

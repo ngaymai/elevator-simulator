@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Elevator } from '../src/domain/entities/Elevator';
-import { ETADispatcher } from '../src/domain/dispatchers/ETADispatcher';
-import { HallCallRequest } from '../src/domain/entities/ElevatorRequest';
+import { Elevator } from '../domain/entities/Elevator';
+import { ETADispatcher } from '../domain/dispatchers/ETADispatcher';
+import { HallCallRequest } from '../domain/entities/ElevatorRequest';
 
 describe('ETADispatcher Algorithm & Polymorphic Selection', () => {
   let dispatcher: ETADispatcher;

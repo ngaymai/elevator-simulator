@@ -1,33 +1,45 @@
 {
   "name": "elevator-simulator-system",
   "version": "1.0.0",
-  "description": "Autonomous Elevator Simulator System with Node.js, React.js, OOP Architecture, and SCAN/LOOK Dispatching",
+  "description": "Autonomous Elevator Simulator System (10 Floors x 3 Cars) with Node.js, React.js, OOP Architecture, and LOOK/SCAN Dispatching",
   "private": true,
-  "workspaces": [
-    "shared",
-    "backend",
-    "frontend"
-  ],
+  "type": "module",
   "scripts": {
-    "dev": "npm run dev --workspace=backend & npm run dev --workspace=frontend",
-    "dev:backend": "npm run dev --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "build": "npm run build --workspace=shared && npm run build --workspace=backend && npm run build --workspace=frontend",
-    "build:shared": "npm run build --workspace=shared",
-    "build:backend": "npm run build --workspace=backend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "test": "npm run test --workspace=backend",
-    "test:watch": "npm run test:watch --workspace=backend"
+    "dev": "concurrently -k -p \"[{name}]\" -n \"BACKEND,FRONTEND\" -c \"blue.bold,magenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "tsx watch src/backend/index.ts",
+    "dev:frontend": "vite",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "tsc -p tsconfig.server.json",
+    "build:frontend": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "node dist-server/index.js"
   },
-  "keywords": [
-    "elevator-simulator",
-    "oop",
-    "state-pattern",
-    "strategy-pattern",
-    "nodejs",
-    "reactjs",
-    "websocket"
-  ],
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "express": "^4.19.2",
+    "lucide-react": "^0.372.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "tailwind-merge": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vitest": "^1.5.0"
+  },
   "author": "TheChadDigital",
   "license": "MIT"
 }

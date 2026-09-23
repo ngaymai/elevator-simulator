@@ -12,7 +12,7 @@ Elevator simulator web app using Node.js (backend) and React.js (frontend) simul
 
 ### Phase 1: Architecture, Scaffolding & Git Setup
 - [x] Initialize Git repository with `.gitignore` and Conventional Commits config
-- [x] Establish Monorepo layout: `backend/`, `frontend/`, `shared/`, `docs/`
+- [x] Establish clean layout: all code in `src/` (`src/backend`, `src/frontend`, `src/shared`), and single unified `package.json` at root
 - [x] Create System Architecture Documentation (`docs/ARCHITECTURE.md`) & ADRs with Mermaid diagrams
 - [x] Define OOP Class Hierarchy & State Machine diagrams (Inheritance, Polymorphism, Encapsulation)
 - [x] Define Shared DTOs, Event Contracts, and WebSocket protocol
