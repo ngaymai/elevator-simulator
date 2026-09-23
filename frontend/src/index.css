@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+  }
+}
+
+/* Custom elevator door sliding animations */
+.door-panel-left {
+  transition: transform 0.3s ease-in-out;
+}
+.door-panel-right {
+  transition: transform 0.3s ease-in-out;
+}
+
+.door-open .door-panel-left {
+  transform: translateX(-100%);
+}
+.door-open .door-panel-right {
+  transform: translateX(100%);
+}
+
+.door-closed .door-panel-left {
+  transform: translateX(0);
+}
+.door-closed .door-panel-right {
+  transform: translateX(0);
+}
