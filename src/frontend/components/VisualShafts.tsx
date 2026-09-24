@@ -1,11 +1,12 @@
 import React from 'react';
-import { ArrowUp, ArrowDown, Minus, ChevronsLeftRight, ChevronsRightLeft } from 'lucide-react';
+import { ArrowUp, ArrowDown, Minus, ChevronsLeftRight, ChevronsRightLeft, UserCheck } from 'lucide-react';
 import { ElevatorSnapshot, TOTAL_FLOORS } from '@shared';
 
 interface VisualShaftsProps {
   elevators: ElevatorSnapshot[];
   selectedCarId: string;
   onSelectCar: (carId: string) => void;
+  onCarCall: (carId: string, floor: number) => void;
   onDoorControl: (carId: string, action: 'HOLD' | 'CLOSE_IMMEDIATELY') => void;
 }
 
@@ -13,17 +14,24 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
   elevators,
   selectedCarId,
   onSelectCar,
+  onCarCall,
   onDoorControl
 }) => {
   const floors = Array.from({ length: TOTAL_FLOORS }, (_, i) => TOTAL_FLOORS - i);
+  const floorButtons = Array.from({ length: TOTAL_FLOORS }, (_, i) => i + 1);
   const CABIN_HEIGHT = 82; // px
 
   return (
     <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col h-full">
       <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-        <h2 className="text-sm font-bold tracking-wide uppercase text-slate-200">
-          Elevator Hoistways (Visual Shaft Cross-Section)
-        </h2>
+        <div>
+          <h2 className="text-sm font-bold tracking-wide uppercase text-slate-200">
+            Elevator Hoistways &amp; Cabin Consoles
+          </h2>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            Cross-section view with integrated in-car destination operating panels (COP).
+          </p>
+        </div>
         <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono">
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-500/40" /> Selected Car
@@ -38,7 +46,7 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
       </div>
 
       {/* Shafts Container */}
-      <div className="flex-1 relative bg-slate-950 rounded-lg border border-slate-800 p-4 min-h-[560px] flex gap-4">
+      <div className="flex-1 relative bg-slate-950 rounded-lg border border-slate-800 p-4 flex gap-4">
         {/* 3 Vertical Elevator Shafts */}
         {elevators.map((car) => {
           const isSelected = car.id === selectedCarId;
@@ -47,7 +55,6 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
           // Cabin bottom strictly bounds within [4px, 100% - CABIN_HEIGHT - 4px]
           // At Floor 1: bottom is 4px. Top is 86px.
           // At Floor 10: bottom is calc(100% - 86px). Top is calc(100% - 4px).
-          // Overflow beyond hoistway header is mathematically impossible.
           const cabinBottom = `calc(4px + ${ratio} * (100% - ${CABIN_HEIGHT + 8}px))`;
           const cableBottom = `calc(4px + ${ratio} * (100% - ${CABIN_HEIGHT + 8}px) + ${CABIN_HEIGHT}px)`;
 
@@ -57,21 +64,21 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
           return (
             <div
               key={car.id}
-              onClick={() => onSelectCar(car.id)}
-              className={`flex-1 relative flex flex-col rounded-xl border transition-all duration-300 cursor-pointer overflow-hidden ${
+              className={`flex-1 relative flex flex-col rounded-xl border transition-all duration-300 overflow-hidden ${
                 isSelected
-                  ? 'bg-rose-950/20 border-rose-500 shadow-xl shadow-rose-950/40 ring-2 ring-rose-500/50'
-                  : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/60'
+                  ? 'bg-rose-950/15 border-rose-500 shadow-xl shadow-rose-950/40 ring-2 ring-rose-500/50'
+                  : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
               }`}
-              title={`Car ${car.id}${isSelected ? ' (Selected)' : ' — Click to select for cabin panel'}`}
             >
-              {/* Shaft Title Header (Fixed height, isolated from hoistway track) */}
+              {/* Shaft Title Header (Click to focus car) */}
               <div
-                className={`w-full h-9 py-1.5 px-3 border-b flex items-center justify-between z-20 shrink-0 transition-colors ${
+                onClick={() => onSelectCar(car.id)}
+                className={`w-full h-9 py-1.5 px-3 border-b flex items-center justify-between z-20 shrink-0 cursor-pointer transition-colors ${
                   isSelected
                     ? 'bg-rose-950/50 border-rose-500/50'
-                    : 'bg-slate-900/95 border-slate-800'
+                    : 'bg-slate-900/95 border-slate-800 hover:bg-slate-800/80'
                 }`}
+                title={`Click to focus Car ${car.id}`}
               >
                 <div className="flex items-center gap-1.5">
                   <span className={`text-xs font-bold transition-colors ${isSelected ? 'text-rose-200' : 'text-slate-200'}`}>
@@ -89,7 +96,10 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
               </div>
 
               {/* Hoistway Track Area */}
-              <div className="flex-1 relative w-full overflow-hidden bg-slate-950/50">
+              <div
+                onClick={() => onSelectCar(car.id)}
+                className="h-[460px] relative w-full overflow-hidden bg-slate-950/50 cursor-pointer"
+              >
                 {/* Horizontal floor guidelines matching exact stopping landing coordinates */}
                 {floors.map((floor) => {
                   const floorRatio = (floor - 1) / (TOTAL_FLOORS - 1);
@@ -251,6 +261,103 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Integrated In-Car Cabin Operating Panel (COP) */}
+              <div className="border-t border-slate-800 bg-slate-950/95 p-2.5 flex flex-col gap-2 shrink-0">
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <div className="flex items-center gap-1.5">
+                    <UserCheck className="w-3.5 h-3.5 text-rose-400" />
+                    <span className="font-bold text-slate-200">Car {car.id} Cabin</span>
+                  </div>
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                      isDoorOpen
+                        ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                        : isDoorClosing
+                        ? 'bg-amber-950 text-amber-400 border border-amber-800'
+                        : 'bg-slate-900 text-slate-500 border border-slate-800'
+                    }`}
+                  >
+                    {isDoorOpen ? `BOARDING (${car.doorDwellRemaining}s)` : isDoorClosing ? 'CLOSING' : 'TRANSIT'}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono px-0.5">
+                  <span>Destination:</span>
+                  <span className="text-amber-400/90 text-[9px]">● Re-click to cancel</span>
+                </div>
+
+                {/* Keypad 1-10 (2 rows of 5) */}
+                <div className="grid grid-cols-5 gap-1 w-full">
+                  {floorButtons.map((floor) => {
+                    const isQueued = car.carRequests.includes(floor);
+                    const isAtFloor = car.currentFloor === floor;
+
+                    return (
+                      <button
+                        key={floor}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectCar(car.id);
+                          onCarCall(car.id, floor);
+                        }}
+                        className={`h-8 rounded font-mono font-bold text-xs transition-all flex items-center justify-center border relative ${
+                          isQueued
+                            ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-600/50 scale-105 z-10'
+                            : isAtFloor
+                            ? 'bg-slate-800 text-rose-400 border-rose-800/80 font-bold'
+                            : 'bg-slate-900 hover:bg-slate-800 text-slate-200 border-slate-800 hover:border-slate-700'
+                        }`}
+                        title={
+                          isQueued
+                            ? `Floor ${floor} queued — Click again to cancel`
+                            : `Press Floor ${floor} inside Car ${car.id}`
+                        }
+                      >
+                        {floor}
+                        {isQueued && (
+                          <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* In-Cabin Door Controls */}
+                <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-slate-900">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDoorControl(car.id, 'HOLD');
+                    }}
+                    disabled={!isDoorOpen}
+                    className={`py-1 px-1.5 rounded text-[10px] font-bold font-mono flex items-center justify-center gap-1 border transition-all ${
+                      isDoorOpen
+                        ? 'bg-slate-900 hover:bg-slate-800 text-emerald-400 border-emerald-800/60 shadow-sm'
+                        : 'bg-slate-950 text-slate-700 border-slate-900 cursor-not-allowed'
+                    }`}
+                    title="Hold Door Open (<|>)"
+                  >
+                    <ChevronsLeftRight className="w-3.5 h-3.5" /> Hold
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDoorControl(car.id, 'CLOSE_IMMEDIATELY');
+                    }}
+                    disabled={!isDoorOpen}
+                    className={`py-1 px-1.5 rounded text-[10px] font-bold font-mono flex items-center justify-center gap-1 border transition-all ${
+                      isDoorOpen
+                        ? 'bg-slate-900 hover:bg-slate-800 text-rose-400 border-rose-800/60 shadow-sm'
+                        : 'bg-slate-950 text-slate-700 border-slate-900 cursor-not-allowed'
+                    }`}
+                    title="Close Door Immediately (>|<)"
+                  >
+                    <ChevronsRightLeft className="w-3.5 h-3.5" /> Close
+                  </button>
                 </div>
               </div>
             </div>

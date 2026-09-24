@@ -4,9 +4,10 @@ import { ActivityLogEntry } from '@shared';
 
 interface ActivityLogFeedProps {
   logs: ActivityLogEntry[];
+  className?: string;
 }
 
-export const ActivityLogFeed: React.FC<ActivityLogFeedProps> = ({ logs }) => {
+export const ActivityLogFeed: React.FC<ActivityLogFeedProps> = ({ logs, className }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +33,11 @@ export const ActivityLogFeed: React.FC<ActivityLogFeedProps> = ({ logs }) => {
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-xl flex flex-col h-64">
+    <div
+      className={`bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-xl flex flex-col ${
+        className || 'h-full min-h-[460px]'
+      }`}
+    >
       <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-emerald-400" />
