@@ -66,13 +66,13 @@ export const App: React.FC = () => {
       <main className="flex-1 p-6 max-w-[1550px] mx-auto w-full">
         {/* 2-Panel Clean Architecture: Corridor Lobby Stations & Hoistways with In-Car Panels */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Panel 1: Sảnh các tầng (Floor Lobby Call Panel) - 4 cols */}
-          <div className="lg:col-span-4">
+          {/* Panel 1: Sảnh các tầng (Floor Lobby Call Panel) - 3 cols (Compact & Sleek) */}
+          <div className="lg:col-span-3">
             <FloorLobby hallCalls={hallCalls} onHallCall={sendHallCall} />
           </div>
 
-          {/* Panel 2: Giếng thang máy vật lý & Bảng điều khiển Cabin tích hợp (Visual Hoistways & Integrated COP) - 8 cols */}
-          <div className="lg:col-span-8">
+          {/* Panel 2: Giếng thang máy vật lý & Bảng điều khiển Cabin tích hợp (Visual Hoistways & Integrated COP) - 9 cols (Spacious) */}
+          <div className="lg:col-span-9">
             <VisualShafts
               elevators={elevators}
               selectedCarId={selectedCarId}
