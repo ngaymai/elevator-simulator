@@ -34,10 +34,10 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
         </div>
         <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono">
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-500/40" /> Selected Car
+            <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-500/40" /> Selected Cabin
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" /> Active Motion
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" /> In Transit
           </span>
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-emerald-400" /> Door Open

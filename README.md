@@ -61,7 +61,7 @@ elevator-simulator/
     │   ├── tests/                 # Vitest unit & integration test suites
     │   └── index.ts               # Server entrypoint (Port 4000)
     └── frontend/                  # React.js + Tailwind CSS Visualizer
-        ├── components/            # ElevatorShaft, CabinControls, Header
+        ├── components/            # VisualShafts, FloorLobby, Header
         ├── hooks/                 # useElevatorSocket hook
         ├── App.tsx
         ├── main.tsx
