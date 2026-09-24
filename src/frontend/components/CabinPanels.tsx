@@ -4,16 +4,19 @@ import { ElevatorSnapshot, TOTAL_FLOORS } from '@shared';
 
 interface CabinPanelsProps {
   elevators: ElevatorSnapshot[];
+  selectedCarId: string;
+  onSelectCar: (carId: string) => void;
   onCarCall: (carId: string, floor: number) => void;
   onDoorControl: (carId: string, action: 'HOLD' | 'CLOSE_IMMEDIATELY') => void;
 }
 
 export const CabinPanels: React.FC<CabinPanelsProps> = ({
   elevators,
+  selectedCarId,
+  onSelectCar,
   onCarCall,
   onDoorControl
 }) => {
-  const [selectedCarId, setSelectedCarId] = useState<string>('1');
   const floorButtons = Array.from({ length: TOTAL_FLOORS }, (_, i) => i + 1);
 
   const activeCar = elevators.find((e) => e.id === selectedCarId) || elevators[0];
@@ -42,7 +45,7 @@ export const CabinPanels: React.FC<CabinPanelsProps> = ({
           return (
             <button
               key={car.id}
-              onClick={() => setSelectedCarId(car.id)}
+              onClick={() => onSelectCar(car.id)}
               className={`py-2 px-3 rounded-lg border text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
                 isSelected
                   ? 'border-rose-500 bg-rose-950/40 text-rose-200 shadow-md shadow-rose-950/50'

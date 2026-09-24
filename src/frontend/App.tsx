@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useElevatorSocket } from './hooks/useElevatorSocket';
 import { Header } from './components/Header';
 import { FloorLobby } from './components/FloorLobby';
@@ -7,6 +7,7 @@ import { CabinPanels } from './components/CabinPanels';
 import { ActivityLogFeed } from './components/ActivityLogFeed';
 
 export const App: React.FC = () => {
+  const [selectedCarId, setSelectedCarId] = useState<string>('1');
   const {
     snapshot,
     isConnected,
@@ -75,13 +76,20 @@ export const App: React.FC = () => {
 
           {/* Panel 2: Giếng thang máy vật lý & Cabin trượt (Visual Hoistways) */}
           <div className="lg:col-span-5">
-            <VisualShafts elevators={elevators} onDoorControl={sendDoorControl} />
+            <VisualShafts
+              elevators={elevators}
+              selectedCarId={selectedCarId}
+              onSelectCar={setSelectedCarId}
+              onDoorControl={sendDoorControl}
+            />
           </div>
 
           {/* Panel 3: Bảng điều khiển Cabin & Live Decision Feed */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             <CabinPanels
               elevators={elevators}
+              selectedCarId={selectedCarId}
+              onSelectCar={setSelectedCarId}
               onCarCall={sendCarCall}
               onDoorControl={sendDoorControl}
             />

@@ -4,10 +4,17 @@ import { ElevatorSnapshot, TOTAL_FLOORS } from '@shared';
 
 interface VisualShaftsProps {
   elevators: ElevatorSnapshot[];
+  selectedCarId: string;
+  onSelectCar: (carId: string) => void;
   onDoorControl: (carId: string, action: 'HOLD' | 'CLOSE_IMMEDIATELY') => void;
 }
 
-export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorControl }) => {
+export const VisualShafts: React.FC<VisualShaftsProps> = ({
+  elevators,
+  selectedCarId,
+  onSelectCar,
+  onDoorControl
+}) => {
   const floors = Array.from({ length: TOTAL_FLOORS }, (_, i) => TOTAL_FLOORS - i);
   const CABIN_HEIGHT = 82; // px
 
@@ -18,6 +25,9 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorCon
           Elevator Hoistways (Visual Shaft Cross-Section)
         </h2>
         <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-500/40" /> Selected Car
+          </span>
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" /> Active Motion
           </span>
@@ -31,6 +41,7 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorCon
       <div className="flex-1 relative bg-slate-950 rounded-lg border border-slate-800 p-4 min-h-[560px] flex gap-4">
         {/* 3 Vertical Elevator Shafts */}
         {elevators.map((car) => {
+          const isSelected = car.id === selectedCarId;
           // Precise mathematical ratio: Floor 1 = 0, Floor 10 = 1
           const ratio = (car.currentFloor - 1) / (TOTAL_FLOORS - 1);
           // Cabin bottom strictly bounds within [4px, 100% - CABIN_HEIGHT - 4px]
@@ -46,13 +57,32 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorCon
           return (
             <div
               key={car.id}
-              className="flex-1 relative flex flex-col bg-slate-900/40 rounded-lg border border-slate-800/80 overflow-hidden"
+              onClick={() => onSelectCar(car.id)}
+              className={`flex-1 relative flex flex-col rounded-xl border transition-all duration-300 cursor-pointer overflow-hidden ${
+                isSelected
+                  ? 'bg-rose-950/20 border-rose-500 shadow-xl shadow-rose-950/40 ring-2 ring-rose-500/50'
+                  : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/60'
+              }`}
+              title={`Car ${car.id}${isSelected ? ' (Selected)' : ' — Click to select for cabin panel'}`}
             >
               {/* Shaft Title Header (Fixed height, isolated from hoistway track) */}
-              <div className="w-full h-9 bg-slate-900/95 py-1.5 px-3 border-b border-slate-800 flex items-center justify-between z-20 shrink-0">
-                <span className="text-xs font-bold text-slate-200">
-                  SHAFT {car.id}
-                </span>
+              <div
+                className={`w-full h-9 py-1.5 px-3 border-b flex items-center justify-between z-20 shrink-0 transition-colors ${
+                  isSelected
+                    ? 'bg-rose-950/50 border-rose-500/50'
+                    : 'bg-slate-900/95 border-slate-800'
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-xs font-bold transition-colors ${isSelected ? 'text-rose-200' : 'text-slate-200'}`}>
+                    SHAFT {car.id}
+                  </span>
+                  {isSelected && (
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200 border border-rose-400/50 font-bold uppercase tracking-wider animate-pulse">
+                      Active
+                    </span>
+                  )}
+                </div>
                 <span className="text-[10px] font-mono text-rose-400 font-semibold">
                   Floor {car.currentFloor}
                 </span>
@@ -92,18 +122,32 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorCon
 
                 {/* Moving Elevator Cabin */}
                 <div
-                  className="absolute left-2.5 right-2.5 rounded-lg border-2 transition-all duration-700 ease-out shadow-2xl z-20 overflow-hidden flex flex-col"
+                  className={`absolute left-2.5 right-2.5 rounded-lg border-2 transition-all duration-700 ease-out shadow-2xl z-20 overflow-hidden flex flex-col ${
+                    isSelected ? 'ring-2 ring-rose-500/50' : ''
+                  }`}
                   style={{
                     bottom: cabinBottom,
                     height: `${CABIN_HEIGHT}px`,
-                    borderColor: isDoorOpen ? '#10b981' : car.direction !== 'IDLE' ? '#e11d48' : '#475569',
+                    borderColor: isDoorOpen
+                      ? '#10b981'
+                      : isSelected
+                      ? '#f43f5e'
+                      : car.direction !== 'IDLE'
+                      ? '#e11d48'
+                      : '#475569',
+                    boxShadow: isSelected ? '0 0 16px rgba(244, 63, 94, 0.45)' : undefined,
                     backgroundColor: '#0f172a'
                   }}
                 >
                   {/* Cabin Top LED Status Bar */}
-                  <div className="h-[22px] bg-slate-950 px-2 py-0.5 border-b border-slate-800 flex items-center justify-between text-[10px] font-mono shrink-0">
-                    <span className="font-bold text-rose-400">
+                  <div
+                    className={`h-[22px] px-2 py-0.5 border-b flex items-center justify-between text-[10px] font-mono shrink-0 transition-colors ${
+                      isSelected ? 'bg-slate-900 border-rose-500/40' : 'bg-slate-950 border-slate-800'
+                    }`}
+                  >
+                    <span className="font-bold text-rose-400 flex items-center gap-1">
                       Car {car.id}
+                      {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />}
                     </span>
 
                     <div className="flex items-center gap-1 font-bold">
@@ -176,7 +220,10 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorCon
 
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => onDoorControl(car.id, 'HOLD')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDoorControl(car.id, 'HOLD');
+                        }}
                         disabled={!isDoorOpen}
                         className={`p-0.5 rounded transition-colors ${
                           isDoorOpen
@@ -188,7 +235,10 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({ elevators, onDoorCon
                         <ChevronsLeftRight className="w-3 h-3" />
                       </button>
                       <button
-                        onClick={() => onDoorControl(car.id, 'CLOSE_IMMEDIATELY')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDoorControl(car.id, 'CLOSE_IMMEDIATELY');
+                        }}
                         disabled={!isDoorOpen}
                         className={`p-0.5 rounded transition-colors ${
                           isDoorOpen
