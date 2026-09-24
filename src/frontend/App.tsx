@@ -80,7 +80,7 @@ export const App: React.FC = () => {
       </main>
 
       <footer className="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
-        Autonomous Elevator Simulator &bull; Enterprise OOP Architecture &bull; Clean LOOK/SCAN Algorithm
+        Elevator Supervisory & Traffic Management System &bull; Active Operations Console
       </footer>
     </div>
   );

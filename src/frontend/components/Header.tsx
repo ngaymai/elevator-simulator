@@ -25,13 +25,13 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div>
           <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            Elevator Simulator
+            Elevator Dispatch Console
             <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-              10 Floors &times; 3 Cars
+              Tower A &bull; 10 Floors &times; 3 Cars
             </span>
           </h1>
           <p className="text-xs text-slate-400">
-            Node.js + React.js &bull; Pure OOP &bull; LOOK/SCAN Multi-Car Dispatcher
+            Real-time multi-car supervisory control and traffic optimization system
           </p>
         </div>
       </div>
