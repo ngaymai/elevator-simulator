@@ -1,4 +1,5 @@
 import { 
+  ActivityLogEntry,
   DEFAULT_DOOR_DWELL_SEC, 
   DEFAULT_TRANSIT_TIME_SEC, 
   DoorControlPayload, 
@@ -22,12 +23,28 @@ export class SimulationEngine {
   readonly #elevators: Elevator[] = [];
   #dispatcher: IElevatorDispatcher;
   readonly #hallCalls: Map<string, { floor: number; direction: 'UP' | 'DOWN'; timestamp: number }> = new Map();
+  readonly #activityLogs: ActivityLogEntry[] = [];
   #tickCount: number = 0;
   #simulationSpeed: number = 1;
   #totalServed: number = 0;
   #totalWaitDurationSec: number = 0;
   #timer: NodeJS.Timeout | null = null;
   #onSnapshotCallback?: (snapshot: SystemSnapshot) => void;
+
+  #addLog(type: ActivityLogEntry['type'], message: string, carId?: string, floor?: number): void {
+    const entry: ActivityLogEntry = {
+      id: Math.random().toString(36).substring(2, 9),
+      timestamp: Date.now(),
+      type,
+      carId,
+      floor,
+      message
+    };
+    this.#activityLogs.unshift(entry);
+    if (this.#activityLogs.length > 25) {
+      this.#activityLogs.pop();
+    }
+  }
 
   constructor(dispatcher?: IElevatorDispatcher) {
     this.#dispatcher = dispatcher ?? new ETADispatcher(DEFAULT_TRANSIT_TIME_SEC, DEFAULT_DOOR_DWELL_SEC);
@@ -59,40 +76,64 @@ export class SimulationEngine {
     }
 
     const key = `${floor}:${direction}`;
-    if (!this.#hallCalls.has(key)) {
-      // Immediate boarding optimization: if an elevator is already at this floor with doors open
-      const alreadyPresentCar = this.#elevators.find(e => 
-        e.currentFloor === floor && 
-        (e.doorState === 'OPEN' || e.doorState === 'OPENING') &&
-        (e.direction === direction || e.direction === 'IDLE')
-      );
 
-      if (alreadyPresentCar) {
-        alreadyPresentCar.holdDoor();
-        this.#totalServed += 1;
-        this.#emitUpdate();
-        return;
+    // Double-click cancellation on Hall Call
+    if (this.#hallCalls.has(key)) {
+      this.#hallCalls.delete(key);
+      for (const car of this.#elevators) {
+        car.removeHallCall(floor, direction);
       }
-
-      this.#hallCalls.set(key, { floor, direction, timestamp: Date.now() });
-
-      const request = new HallCallRequest(floor, direction);
-      const chosenElevator = this.#dispatcher.selectElevator(this.#elevators, request);
-      chosenElevator.assignHallCall(request);
-
+      this.#addLog('DISPATCH', `Hall call at Floor ${floor} ${direction} cancelled (Double-click toggle).`, undefined, floor);
       this.#emitUpdate();
+      return;
     }
+
+    // Immediate boarding optimization: if an elevator is already at this floor with doors open
+    const alreadyPresentCar = this.#elevators.find(e => 
+      e.currentFloor === floor && 
+      (e.doorState === 'OPEN' || e.doorState === 'OPENING') &&
+      (e.direction === direction || e.direction === 'IDLE')
+    );
+
+    if (alreadyPresentCar) {
+      alreadyPresentCar.holdDoor();
+      this.#totalServed += 1;
+      this.#addLog('BOARDING', `Car ${alreadyPresentCar.id} is already at Floor ${floor}. Door held open for passenger boarding.`, alreadyPresentCar.id, floor);
+      this.#emitUpdate();
+      return;
+    }
+
+    this.#hallCalls.set(key, { floor, direction, timestamp: Date.now() });
+
+    const request = new HallCallRequest(floor, direction);
+    const chosenElevator = this.#dispatcher.selectElevator(this.#elevators, request);
+    chosenElevator.assignHallCall(request);
+    this.#addLog('DISPATCH', `Hall call at Floor ${floor} ${direction} assigned to Car ${chosenElevator.id} (Optimal ETA).`, chosenElevator.id, floor);
+
+    this.#emitUpdate();
   }
 
   /**
-   * Registers internal destination request for a specific elevator car.
+   * Registers or cancels internal destination request for a specific elevator car (double-click toggle).
    */
   public handleCarCall(carId: string, floor: number): void {
     const elevator = this.#elevators.find(e => e.id === carId);
-    if (elevator) {
-      elevator.addDestination(floor);
-      this.#emitUpdate();
+    if (!elevator) {
+      return;
     }
+
+    const snapshot = elevator.getSnapshot();
+    const isAlreadyQueued = snapshot.carRequests.includes(floor);
+
+    if (isAlreadyQueued) {
+      elevator.removeDestination(floor);
+      this.#addLog('DECISION', `Car ${carId}: Cancelled destination Floor ${floor} (Double-click toggle).`, carId, floor);
+    } else {
+      elevator.addDestination(floor);
+      this.#addLog('DECISION', `Car ${carId}: Destination Floor ${floor} registered.`, carId, floor);
+    }
+
+    this.#emitUpdate();
   }
 
   /**
@@ -106,8 +147,10 @@ export class SimulationEngine {
 
     if (payload.action === 'HOLD') {
       elevator.holdDoor();
+      this.#addLog('DOOR', `Car ${payload.carId}: Door Hold (<|>) activated.`, payload.carId);
     } else if (payload.action === 'CLOSE_IMMEDIATELY') {
       elevator.closeDoorImmediately();
+      this.#addLog('DOOR', `Car ${payload.carId}: Door Force Close (>|<) activated.`, payload.carId);
     }
     this.#emitUpdate();
   }
@@ -136,6 +179,10 @@ export class SimulationEngine {
 
       // Check if a hall call at this floor was served
       if (snapshot.doorState === 'OPEN') {
+        if (prevDoor !== 'OPEN') {
+          this.#addLog('BOARDING', `Car ${snapshot.id} arrived at Floor ${snapshot.currentFloor}. Doors opened.`, snapshot.id, snapshot.currentFloor);
+        }
+
         const upKey = `${snapshot.currentFloor}:UP`;
         const downKey = `${snapshot.currentFloor}:DOWN`;
 
@@ -185,6 +232,8 @@ export class SimulationEngine {
     this.#totalServed = 0;
     this.#totalWaitDurationSec = 0;
     this.#hallCalls.clear();
+    this.#activityLogs.length = 0;
+    this.#addLog('SYSTEM', 'Simulation reset: All cars idle at Floor 1.');
     for (const elevator of this.#elevators) {
       elevator.reset(1);
     }
@@ -213,7 +262,8 @@ export class SimulationEngine {
       elevators: this.#elevators.map(e => e.getSnapshot()),
       hallCalls: hallCallStates,
       totalRequestsServed: this.#totalServed,
-      averageWaitTimeSec: avgWaitTime
+      averageWaitTimeSec: avgWaitTime,
+      activityLogs: [...this.#activityLogs]
     };
   }
 

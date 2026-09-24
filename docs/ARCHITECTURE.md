@@ -160,8 +160,8 @@ stateDiagram-v2
     
     state DOOR_OPEN {
         [*] --> CountingDwellTicks
-        CountingDwellTicks --> CountingDwellTicks : Press Hold Button (<|>)
-        CountingDwellTicks --> DOOR_CLOSING : Dwell Expired OR Press Close (>|<)
+        CountingDwellTicks --> CountingDwellTicks : Press Hold Button (Hold)
+        CountingDwellTicks --> DOOR_CLOSING : Dwell Expired OR Press Close (Close)
     }
 
     DOOR_CLOSING --> DOOR_OPENING : Obstruction / Re-open
@@ -194,14 +194,14 @@ sequenceDiagram
     UserUp ->> UI: Clicks UP button at Floor 5
     UI ->> WS: emit("hall_call", { floor: 5, direction: "UP" })
     WS ->> Disp: dispatch(HallCall(5, UP))
-    Disp ->> CarA: evaluateETA() -> Lowest cost (On path, same direction)
+    Disp ->> CarA: evaluateETA() : Lowest cost (On path, same direction)
     Disp ->> CarA: scheduleStop(5)
     Note over CarA: Floor 5 added to UP stop list
 
     UserDown ->> UI: Clicks DOWN button at Floor 5
     UI ->> WS: emit("hall_call", { floor: 5, direction: "DOWN" })
     WS ->> Disp: dispatch(HallCall(5, DOWN))
-    Note over Disp,CarA: CarA is going UP; cannot pick up DOWN passenger yet!
+    Note over Disp, CarA: CarA is going UP -- cannot pick up DOWN passenger yet!
     Disp ->> CarA: scheduleReturnStop(5, DOWN) (Queue for downward pass)
 
     CarA ->> CarA: Advances to Floor 5 (direction: UP)
@@ -213,7 +213,7 @@ sequenceDiagram
     UI ->> WS: emit("car_call", { carId: "A", floor: 8 })
     WS ->> CarA: scheduleStop(8)
 
-    CarA ->> CarA: Closes doors, moves Floor 6 -> 7 -> 8 -> 10
+    CarA ->> CarA: Closes doors, moves towards Floor 10
     Note over CarA: Reaches extremum Floor 10, completes UP queue
     CarA ->> CarA: Reverses direction to DOWN
     CarA ->> CarA: Advances down towards Floor 5

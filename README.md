@@ -27,10 +27,8 @@ An enterprise-grade, event-driven elevator simulator and traffic supervisory web
 
 ## System Architecture & Technical Documentation
 
-All detailed architectural documentation includes **Mermaid diagrams**:
-- [Architecture & Domain Model](docs/ARCHITECTURE.md) - Class hierarchy, State Machine, C4 Container diagram.
-- [ADR-001: Multi-Car Dispatching Strategy](docs/ADR-001-DISPATCHER.md) - Justification and mathematical model of the ETA Cost Function.
-- [Bounded Adversarial & Reliability Review](docs/ADVERSARIAL_REVIEW.md) - Red Team vs. Blue Team stress tests and mitigations.
+All detailed architectural documentation includes interactive **Mermaid diagrams**:
+- [Architecture & Domain Model](docs/ARCHITECTURE.md) - Class hierarchy, State Machine, C4 Container diagram, and dispatching sequence.
 
 ---
 
@@ -47,10 +45,8 @@ elevator-simulator/
 ├── tailwind.config.js             # Tailwind CSS configuration
 ├── postcss.config.js              # PostCSS plugins
 ├── index.html                     # Entry HTML pointing to /src/frontend/main.tsx
-├── docs/                          # Architectural specs, ADRs, and reliability reviews
-│   ├── ARCHITECTURE.md
-│   ├── ADR-001-DISPATCHER.md
-│   └── ADVERSARIAL_REVIEW.md
+├── docs/                          # Architectural specifications
+│   └── ARCHITECTURE.md
 └── src/                           # ALL APPLICATION SOURCE CODE
     ├── shared/                    # Types, Enums, Contracts, Constants
     │   └── index.ts
@@ -61,7 +57,7 @@ elevator-simulator/
     │   ├── tests/                 # Vitest unit & integration test suites
     │   └── index.ts               # Server entrypoint (Port 4000)
     └── frontend/                  # React.js + Tailwind CSS Visualizer
-        ├── components/            # ElevatorShaft, CabinControls, Header
+        ├── components/            # VisualShafts, FloorLobby, Header
         ├── hooks/                 # useElevatorSocket hook
         ├── App.tsx
         ├── main.tsx

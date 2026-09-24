@@ -53,4 +53,34 @@ describe('SimulationEngine Multi-Car Orchestration', () => {
     expect(snapshot.elevators.every(e => e.currentFloor === 1)).toBe(true);
     expect(snapshot.hallCalls.every(h => !h.upActive && !h.downActive)).toBe(true);
   });
+
+  it('should cancel car destination on second call (double-click toggle)', () => {
+    // 1st click: selects floor 6
+    engine.handleCarCall('1', 6);
+    let snapshot = engine.getSystemSnapshot();
+    let car1 = snapshot.elevators.find(e => e.id === '1');
+    expect(car1?.carRequests).toContain(6);
+
+    // 2nd click: cancels floor 6
+    engine.handleCarCall('1', 6);
+    snapshot = engine.getSystemSnapshot();
+    car1 = snapshot.elevators.find(e => e.id === '1');
+    expect(car1?.carRequests).not.toContain(6);
+  });
+
+  it('should cancel hall call on second call (double-click toggle)', () => {
+    // 1st click: calls Floor 5 UP
+    engine.handleHallCall(5, 'UP');
+    let snapshot = engine.getSystemSnapshot();
+    let floor5 = snapshot.hallCalls.find(h => h.floor === 5);
+    expect(floor5?.upActive).toBe(true);
+    expect(snapshot.elevators.some(e => e.assignedStops.includes(5))).toBe(true);
+
+    // 2nd click: cancels Floor 5 UP
+    engine.handleHallCall(5, 'UP');
+    snapshot = engine.getSystemSnapshot();
+    floor5 = snapshot.hallCalls.find(h => h.floor === 5);
+    expect(floor5?.upActive).toBe(false);
+    expect(snapshot.elevators.some(e => e.assignedStops.includes(5))).toBe(false);
+  });
 });
