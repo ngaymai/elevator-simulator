@@ -1,8 +1,6 @@
-# Enterprise Multi-Car Elevator Simulator (10 Floors &times; 3 Cars)
+# Enterprise Multi-Car Elevator Supervisory & Dispatch System (10 Floors &times; 3 Cars)
 
-An enterprise-grade, event-driven elevator simulator web application built with **Node.js** (backend) and **React.js** (frontend). The system simulates and optimizes 3 parallel elevators servicing a 10-floor office building adhering strictly to **Object-Oriented Programming (OOP)** paradigms and the **LOOK/SCAN directional dispatching algorithm**.
-
-Developed to meet and exceed the requirements in `Requirements/BAT-Node.js - Interview Test-231224-052639.pdf`.
+An enterprise-grade, event-driven elevator simulator and traffic supervisory web application built with **Node.js** (backend) and **React.js** (frontend). The system simulates and optimizes 3 parallel elevators servicing a 10-floor office building adhering strictly to **Object-Oriented Programming (OOP)** paradigms and the **LOOK/SCAN directional dispatching algorithm**.
 
 ---
 
@@ -23,7 +21,7 @@ Developed to meet and exceed the requirements in `Requirements/BAT-Node.js - Int
   - Synchronized state streaming via WebSocket (`socket.io`).
   - Speed toggle (1x, 2x, 5x) for rapid simulation testing and interactive presentation.
 - **Automated Verification**:
-  - 100% test coverage verifying the interview directional LOOK/SCAN constraints via Vitest (`npm test`).
+  - 100% test coverage verifying directional LOOK/SCAN constraints via Vitest (`npm test`).
 
 ---
 
@@ -32,8 +30,7 @@ Developed to meet and exceed the requirements in `Requirements/BAT-Node.js - Int
 All detailed architectural documentation includes **Mermaid diagrams**:
 - [Architecture & Domain Model](docs/ARCHITECTURE.md) - Class hierarchy, State Machine, C4 Container diagram.
 - [ADR-001: Multi-Car Dispatching Strategy](docs/ADR-001-DISPATCHER.md) - Justification and mathematical model of the ETA Cost Function.
-- [Interview Presentation Strategy (45 Minutes)](docs/INTERVIEW_STRATEGY.md) - Section-by-section presentation breakdown for the technical interview.
-- [Bounded Adversarial Review](docs/ADVERSARIAL_REVIEW.md) - Red Team vs. Blue Team stress tests and mitigations.
+- [Bounded Adversarial & Reliability Review](docs/ADVERSARIAL_REVIEW.md) - Red Team vs. Blue Team stress tests and mitigations.
 
 ---
 
@@ -42,7 +39,7 @@ All detailed architectural documentation includes **Mermaid diagrams**:
 All source code is cleanly consolidated under `/src`:
 
 ```text
-TheChadDigital/
+elevator-simulator/
 ├── package.json                   # Single unified package.json for entire project
 ├── tsconfig.json                  # Root TypeScript compiler options
 ├── tsconfig.server.json           # Server build config
@@ -50,12 +47,9 @@ TheChadDigital/
 ├── tailwind.config.js             # Tailwind CSS configuration
 ├── postcss.config.js              # PostCSS plugins
 ├── index.html                     # Entry HTML pointing to /src/frontend/main.tsx
-├── TASK_LIST.md                   # Real-time task progress tracker
-├── Requirements/                  # Original interview test problem specification
-├── docs/                          # Architectural specs, ADRs, and presentation guides
+├── docs/                          # Architectural specs, ADRs, and reliability reviews
 │   ├── ARCHITECTURE.md
 │   ├── ADR-001-DISPATCHER.md
-│   ├── INTERVIEW_STRATEGY.md
 │   └── ADVERSARIAL_REVIEW.md
 └── src/                           # ALL APPLICATION SOURCE CODE
     ├── shared/                    # Types, Enums, Contracts, Constants

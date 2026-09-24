@@ -174,7 +174,7 @@ stateDiagram-v2
 
 ## 4. End-to-End Event Sequence: SCAN/LOOK Dispatching Flow
 
-The sequence below illustrates the exact behavior required by the interview specification:
+The sequence below illustrates the exact behavior of the LOOK/SCAN dispatching logic:
 1. Elevator A is moving UP from Floor 1 to Floor 10.
 2. Passenger at Floor 5 presses UP $\rightarrow$ Elevator A stops at Floor 5 to pick up passenger.
 3. Passenger at Floor 5 presses DOWN $\rightarrow$ Elevator A does **NOT** stop at Floor 5 on the way up; it serves the call after completing its upward trajectory and switching direction.

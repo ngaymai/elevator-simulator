@@ -12,7 +12,7 @@ In an office building with 10 floors and 3 parallel elevators, multiple passenge
 The system must satisfy:
 1. Minimizing passenger wait times and round-trip delays.
 2. Complying with directional selectivity: an elevator moving in direction $D$ must only stop at intermediate floors if the request shares direction $D$ or is an internal destination. Requests in opposite directions must not interrupt ongoing transit.
-3. Showcasing clear Object-Oriented Design principles (Inheritance, Encapsulation, Polymorphism) suitable for evaluation in a Senior/Staff engineering interview.
+3. Showcasing clear Object-Oriented Design principles (Inheritance, Encapsulation, Polymorphism) suitable for enterprise-grade production software.
 
 ---
 
@@ -74,7 +74,7 @@ Where:
 
 - **Positive**:
   - Elevator allocation minimizes waiting time and eliminates thrashing.
-  - Zero disruption of moving cars by counter-directional requests (strictly satisfies interview test constraint).
+  - Zero disruption of moving cars by counter-directional requests (strictly satisfies directional dispatching constraints).
   - Clean `IElevatorDispatcher` interface allows runtime algorithm swapping for benchmarking.
 - **Negative / Trade-offs**:
   - Computational complexity is higher than naive Nearest Car ($O(K \times S)$ where $K=3$ cars and $S \le 10$ stops), but negligible in Node.js event loops ($< 0.05\text{ms}$).

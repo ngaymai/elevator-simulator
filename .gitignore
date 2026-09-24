@@ -42,3 +42,8 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+# Internal Interview & Assessment Material
+Requirements/
+docs/INTERVIEW_STRATEGY.md
+TASK_LIST.md
