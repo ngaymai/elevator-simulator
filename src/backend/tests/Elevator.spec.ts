@@ -124,4 +124,35 @@ describe('Elevator Domain Entity & LOOK/SCAN Logic', () => {
     expect(elevator.doorState).toBe('OPEN');
     expect(downCall.isServed).toBe(true);
   });
+
+  it('should support destination cancellation and recalculate direction', () => {
+    elevator.addDestination(6);
+    elevator.addDestination(8);
+    expect(elevator.stops).toEqual([6, 8]);
+    expect(elevator.direction).toBe('UP');
+
+    // Remove floor 8
+    const removed8 = elevator.removeDestination(8);
+    expect(removed8).toBe(true);
+    expect(elevator.stops).toEqual([6]);
+    expect(elevator.direction).toBe('UP');
+
+    // Remove floor 6
+    const removed6 = elevator.removeDestination(6);
+    expect(removed6).toBe(true);
+    expect(elevator.stops).toEqual([]);
+    expect(elevator.direction).toBe('IDLE');
+  });
+
+  it('should support hall call cancellation and recalculate direction', () => {
+    const hallCall = new HallCallRequest(7, 'UP');
+    elevator.assignHallCall(hallCall);
+    expect(elevator.stops).toEqual([7]);
+    expect(elevator.direction).toBe('UP');
+
+    const removed = elevator.removeHallCall(7, 'UP');
+    expect(removed).toBe(true);
+    expect(elevator.stops).toEqual([]);
+    expect(elevator.direction).toBe('IDLE');
+  });
 });

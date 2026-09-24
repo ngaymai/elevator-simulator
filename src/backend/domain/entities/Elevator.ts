@@ -85,6 +85,24 @@ export class Elevator {
   }
 
   /**
+   * Cancels/removes an internal car call (double-click to deselect).
+   */
+  public removeDestination(destinationFloor: number): boolean {
+    let removed = false;
+    for (let i = this.#assignedRequests.length - 1; i >= 0; i--) {
+      const r = this.#assignedRequests[i];
+      if (!r.isServed && r instanceof CarCallRequest && r.floor === destinationFloor) {
+        this.#assignedRequests.splice(i, 1);
+        removed = true;
+      }
+    }
+    if (removed) {
+      this.#recalculateDirectionAfterRemoval();
+    }
+    return removed;
+  }
+
+  /**
    * External Hall Call: Dispatcher assigns an external request to this car.
    */
   public assignHallCall(request: HallCallRequest): void {
@@ -94,6 +112,46 @@ export class Elevator {
 
     if (!alreadyQueued) {
       this.#assignedRequests.push(request);
+      this.#updateDirectionIfIdle();
+    }
+  }
+
+  /**
+   * Cancels/removes an assigned hall call.
+   */
+  public removeHallCall(floor: number, direction: 'UP' | 'DOWN'): boolean {
+    let removed = false;
+    for (let i = this.#assignedRequests.length - 1; i >= 0; i--) {
+      const r = this.#assignedRequests[i];
+      if (!r.isServed && r instanceof HallCallRequest && r.floor === floor && r.direction === direction) {
+        this.#assignedRequests.splice(i, 1);
+        removed = true;
+      }
+    }
+    if (removed) {
+      this.#recalculateDirectionAfterRemoval();
+    }
+    return removed;
+  }
+
+  #recalculateDirectionAfterRemoval(): void {
+    const activeStops = this.stops;
+    if (activeStops.length === 0) {
+      this.#direction = 'IDLE';
+      if (this.#door.isClosed()) {
+        this.#status = 'IDLE';
+      }
+      return;
+    }
+
+    const stopsAbove = activeStops.filter(f => f > this.#currentFloor);
+    const stopsBelow = activeStops.filter(f => f < this.#currentFloor);
+
+    if (this.#direction === 'UP' && stopsAbove.length === 0) {
+      this.#direction = stopsBelow.length > 0 ? 'DOWN' : 'IDLE';
+    } else if (this.#direction === 'DOWN' && stopsBelow.length === 0) {
+      this.#direction = stopsAbove.length > 0 ? 'UP' : 'IDLE';
+    } else if (this.#direction === 'IDLE') {
       this.#updateDirectionIfIdle();
     }
   }

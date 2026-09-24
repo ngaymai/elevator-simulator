@@ -76,43 +76,64 @@ export class SimulationEngine {
     }
 
     const key = `${floor}:${direction}`;
-    if (!this.#hallCalls.has(key)) {
-      // Immediate boarding optimization: if an elevator is already at this floor with doors open
-      const alreadyPresentCar = this.#elevators.find(e => 
-        e.currentFloor === floor && 
-        (e.doorState === 'OPEN' || e.doorState === 'OPENING') &&
-        (e.direction === direction || e.direction === 'IDLE')
-      );
 
-      if (alreadyPresentCar) {
-        alreadyPresentCar.holdDoor();
-        this.#totalServed += 1;
-        this.#addLog('BOARDING', `Car ${alreadyPresentCar.id} is already at Floor ${floor}. Door held open for passenger boarding.`, alreadyPresentCar.id, floor);
-        this.#emitUpdate();
-        return;
+    // Double-click cancellation on Hall Call
+    if (this.#hallCalls.has(key)) {
+      this.#hallCalls.delete(key);
+      for (const car of this.#elevators) {
+        car.removeHallCall(floor, direction);
       }
-
-      this.#hallCalls.set(key, { floor, direction, timestamp: Date.now() });
-
-      const request = new HallCallRequest(floor, direction);
-      const chosenElevator = this.#dispatcher.selectElevator(this.#elevators, request);
-      chosenElevator.assignHallCall(request);
-      this.#addLog('DISPATCH', `Hall call at Floor ${floor} ${direction} assigned to Car ${chosenElevator.id} (Optimal ETA).`, chosenElevator.id, floor);
-
+      this.#addLog('DISPATCH', `Hall call at Floor ${floor} ${direction} cancelled (Double-click toggle).`, undefined, floor);
       this.#emitUpdate();
+      return;
     }
+
+    // Immediate boarding optimization: if an elevator is already at this floor with doors open
+    const alreadyPresentCar = this.#elevators.find(e => 
+      e.currentFloor === floor && 
+      (e.doorState === 'OPEN' || e.doorState === 'OPENING') &&
+      (e.direction === direction || e.direction === 'IDLE')
+    );
+
+    if (alreadyPresentCar) {
+      alreadyPresentCar.holdDoor();
+      this.#totalServed += 1;
+      this.#addLog('BOARDING', `Car ${alreadyPresentCar.id} is already at Floor ${floor}. Door held open for passenger boarding.`, alreadyPresentCar.id, floor);
+      this.#emitUpdate();
+      return;
+    }
+
+    this.#hallCalls.set(key, { floor, direction, timestamp: Date.now() });
+
+    const request = new HallCallRequest(floor, direction);
+    const chosenElevator = this.#dispatcher.selectElevator(this.#elevators, request);
+    chosenElevator.assignHallCall(request);
+    this.#addLog('DISPATCH', `Hall call at Floor ${floor} ${direction} assigned to Car ${chosenElevator.id} (Optimal ETA).`, chosenElevator.id, floor);
+
+    this.#emitUpdate();
   }
 
   /**
-   * Registers internal destination request for a specific elevator car.
+   * Registers or cancels internal destination request for a specific elevator car (double-click toggle).
    */
   public handleCarCall(carId: string, floor: number): void {
     const elevator = this.#elevators.find(e => e.id === carId);
-    if (elevator) {
-      elevator.addDestination(floor);
-      this.#addLog('DECISION', `Car ${carId}: Cabin destination Floor ${floor} registered.`, carId, floor);
-      this.#emitUpdate();
+    if (!elevator) {
+      return;
     }
+
+    const snapshot = elevator.getSnapshot();
+    const isAlreadyQueued = snapshot.carRequests.includes(floor);
+
+    if (isAlreadyQueued) {
+      elevator.removeDestination(floor);
+      this.#addLog('DECISION', `Car ${carId}: Cancelled destination Floor ${floor} (Double-click toggle).`, carId, floor);
+    } else {
+      elevator.addDestination(floor);
+      this.#addLog('DECISION', `Car ${carId}: Destination Floor ${floor} registered.`, carId, floor);
+    }
+
+    this.#emitUpdate();
   }
 
   /**

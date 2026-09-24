@@ -76,7 +76,12 @@ export const CabinPanels: React.FC<CabinPanelsProps> = ({
             </span>
           </div>
 
-          {/* Keypad 1-10 */}
+          {/* Keypad 1-10 with cancellation hint */}
+          <div className="w-full flex items-center justify-between text-[11px] text-slate-400 font-mono mb-2 px-1">
+            <span>Destination Keypad:</span>
+            <span className="text-amber-400/90 text-[10px]">● Re-click active to cancel</span>
+          </div>
+
           <div className="grid grid-cols-5 gap-2 w-full mb-4">
             {floorButtons.map((floor) => {
               const isSelected = activeCar.carRequests.includes(floor);
@@ -86,16 +91,23 @@ export const CabinPanels: React.FC<CabinPanelsProps> = ({
                 <button
                   key={floor}
                   onClick={() => onCarCall(activeCar.id, floor)}
-                  className={`h-10 rounded-lg font-mono font-bold text-xs transition-all flex items-center justify-center border ${
+                  className={`h-10 rounded-lg font-mono font-bold text-xs transition-all flex items-center justify-center border relative ${
                     isSelected
-                      ? 'bg-rose-600 text-white border-rose-500 shadow-md shadow-rose-600/50 scale-105'
+                      ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-600/50 scale-105'
                       : isCurrent
                       ? 'bg-slate-800 text-rose-400 border-rose-800/60'
                       : 'bg-slate-900 hover:bg-slate-800 text-slate-200 border-slate-800 hover:border-slate-700'
                   }`}
-                  title={`Select Destination Floor ${floor}`}
+                  title={
+                    isSelected
+                      ? `Floor ${floor} active — Click again (or double-click) to cancel`
+                      : `Select Destination Floor ${floor}`
+                  }
                 >
                   {floor}
+                  {isSelected && (
+                    <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                  )}
                 </button>
               );
             })}

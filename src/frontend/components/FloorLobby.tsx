@@ -24,9 +24,10 @@ export const FloorLobby: React.FC<FloorLobbyProps> = ({ hallCalls, onHallCall })
         </span>
       </div>
 
-      <p className="text-[11px] text-slate-400 mb-3">
-        Passengers at each floor call an elevator from the floor corridor. The central dispatcher assigns the optimal car.
-      </p>
+      <div className="flex items-center justify-between text-[11px] text-slate-400 mb-3">
+        <span>External corridor call panel:</span>
+        <span className="text-amber-400/90 font-mono text-[10px]">● Re-click button to cancel</span>
+      </div>
 
       {/* Vertical list of 10 floors (10 down to 1) */}
       <div className="flex-1 flex flex-col justify-between gap-1.5">
@@ -82,7 +83,11 @@ export const FloorLobby: React.FC<FloorLobbyProps> = ({ hallCalls, onHallCall })
                         ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/50 scale-105'
                         : 'bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700'
                     }`}
-                    title={`Call Elevator at Floor ${floor} to go UP`}
+                    title={
+                      isUpActive
+                        ? `Floor ${floor} UP active — Click again to cancel`
+                        : `Call Elevator at Floor ${floor} to go UP`
+                    }
                   >
                     <ArrowUp className="w-3.5 h-3.5" /> UP
                   </button>
@@ -98,7 +103,11 @@ export const FloorLobby: React.FC<FloorLobbyProps> = ({ hallCalls, onHallCall })
                         ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/50 scale-105'
                         : 'bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700'
                     }`}
-                    title={`Call Elevator at Floor ${floor} to go DOWN`}
+                    title={
+                      isDownActive
+                        ? `Floor ${floor} DOWN active — Click again to cancel`
+                        : `Call Elevator at Floor ${floor} to go DOWN`
+                    }
                   >
                     <ArrowDown className="w-3.5 h-3.5" /> DN
                   </button>
