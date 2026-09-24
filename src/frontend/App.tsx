@@ -63,7 +63,7 @@ export const App: React.FC = () => {
         onReset={resetSimulation}
       />
 
-      <main className="flex-1 p-6 max-w-[1550px] mx-auto w-full">
+      <main className="flex-1 p-6 max-w-7xl mx-auto w-full">
         {/* 2-Panel Clean Architecture: Corridor Lobby Stations & Hoistways with In-Car Panels */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Panel 1: Sảnh các tầng (Floor Lobby Call Panel) - 3 cols (Compact & Sleek) */}

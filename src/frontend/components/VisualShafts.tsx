@@ -19,7 +19,7 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
 }) => {
   const floors = Array.from({ length: TOTAL_FLOORS }, (_, i) => TOTAL_FLOORS - i);
   const floorButtons = Array.from({ length: TOTAL_FLOORS }, (_, i) => i + 1);
-  const CABIN_HEIGHT = 82; // px
+  const CABIN_HEIGHT = 80; // px
 
   return (
     <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col h-full">
@@ -46,7 +46,7 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
       </div>
 
       {/* Shafts Container */}
-      <div className="flex-1 relative bg-slate-950 rounded-lg border border-slate-800 p-4 flex gap-4">
+      <div className="flex-1 relative bg-slate-950 rounded-lg border border-slate-800 p-4 flex justify-center gap-5">
         {/* 3 Vertical Elevator Shafts */}
         {elevators.map((car) => {
           const isSelected = car.id === selectedCarId;
@@ -64,7 +64,7 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
           return (
             <div
               key={car.id}
-              className="flex-1 relative flex flex-col rounded-xl border border-slate-800/80 bg-slate-900/40 overflow-hidden"
+              className="flex-1 max-w-[270px] relative flex flex-col rounded-xl border border-slate-800/80 bg-slate-900/40 overflow-hidden shadow-lg"
             >
               {/* Shaft Title Header (Click to focus car) */}
               <div
@@ -83,7 +83,7 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
               {/* Hoistway Track Area */}
               <div
                 onClick={() => onSelectCar(car.id)}
-                className="h-[460px] relative w-full overflow-hidden bg-slate-950/50 cursor-pointer"
+                className="h-[500px] relative w-full overflow-hidden bg-slate-950/50 cursor-pointer"
               >
                 {/* Horizontal floor guidelines matching exact stopping landing coordinates */}
                 {floors.map((floor) => {
