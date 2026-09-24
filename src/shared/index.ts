@@ -60,6 +60,15 @@ export interface HallCallState {
   downActive: boolean;
 }
 
+export interface ActivityLogEntry {
+  id: string;
+  timestamp: number;
+  type: 'DISPATCH' | 'DECISION' | 'BOARDING' | 'DOOR' | 'SYSTEM';
+  carId?: string;
+  floor?: number;
+  message: string;
+}
+
 export interface SystemSnapshot {
   timestamp: number;
   tickCount: number;
@@ -68,6 +77,7 @@ export interface SystemSnapshot {
   hallCalls: HallCallState[];
   totalRequestsServed: number;
   averageWaitTimeSec: number;
+  activityLogs?: ActivityLogEntry[];
 }
 
 // WebSocket Event Names
