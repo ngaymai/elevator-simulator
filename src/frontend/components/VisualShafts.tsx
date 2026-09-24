@@ -64,32 +64,17 @@ export const VisualShafts: React.FC<VisualShaftsProps> = ({
           return (
             <div
               key={car.id}
-              className={`flex-1 relative flex flex-col rounded-xl border transition-all duration-300 overflow-hidden ${
-                isSelected
-                  ? 'bg-rose-950/15 border-rose-500 shadow-xl shadow-rose-950/40 ring-2 ring-rose-500/50'
-                  : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
-              }`}
+              className="flex-1 relative flex flex-col rounded-xl border border-slate-800/80 bg-slate-900/40 overflow-hidden"
             >
               {/* Shaft Title Header (Click to focus car) */}
               <div
                 onClick={() => onSelectCar(car.id)}
-                className={`w-full h-9 py-1.5 px-3 border-b flex items-center justify-between z-20 shrink-0 cursor-pointer transition-colors ${
-                  isSelected
-                    ? 'bg-rose-950/50 border-rose-500/50'
-                    : 'bg-slate-900/95 border-slate-800 hover:bg-slate-800/80'
-                }`}
+                className="w-full h-9 py-1.5 px-3 border-b border-slate-800 bg-slate-900/95 flex items-center justify-between z-20 shrink-0 cursor-pointer hover:bg-slate-800/80 transition-colors"
                 title={`Click to focus Car ${car.id}`}
               >
-                <div className="flex items-center gap-1.5">
-                  <span className={`text-xs font-bold transition-colors ${isSelected ? 'text-rose-200' : 'text-slate-200'}`}>
-                    SHAFT {car.id}
-                  </span>
-                  {isSelected && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200 border border-rose-400/50 font-bold uppercase tracking-wider animate-pulse">
-                      Active
-                    </span>
-                  )}
-                </div>
+                <span className="text-xs font-bold text-slate-200">
+                  SHAFT {car.id}
+                </span>
                 <span className="text-[10px] font-mono text-rose-400 font-semibold">
                   Floor {car.currentFloor}
                 </span>
