@@ -46,4 +46,6 @@ temp/
 # Internal Interview & Assessment Material
 Requirements/
 docs/INTERVIEW_STRATEGY.md
+docs/ADR-001-DISPATCHER.md
+docs/ADVERSARIAL_REVIEW.md
 TASK_LIST.md
