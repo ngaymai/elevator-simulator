@@ -25,7 +25,7 @@ graph TD
     subgraph OptionA ["Option A: Static Nearest Car (NC)"]
         NC1["Distance = |Car_Floor - Request_Floor|"]
         NC2["Assign to min(Distance)"]
-        NC3["Flaw: Ignores direction; car moving away may be assigned!"]
+        NC3["Flaw: Ignores direction, car moving away may be assigned!"]
     end
     
     subgraph OptionB ["Option B: Estimated Time of Arrival (ETA Cost Function) - SELECTED"]

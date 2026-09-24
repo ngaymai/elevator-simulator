@@ -14,7 +14,7 @@ graph TD
 
     subgraph Round2 ["Round 2: Door Safety & State Machine"]
         R2_Attack["Red Team: In-flight door actuation & out-of-bounds floors"]
-        R2_Defense["Blue Team: Strict FSM guards & input validation [1..10]"]
+        R2_Defense["Blue Team: Strict FSM guards & input validation (1..10)"]
         R2_Attack --> R2_Defense
     end
 
